@@ -24,5 +24,5 @@ EXPOSE 8080
 #======== Build cBioPortal on Startup ===============#
 CMD mvn -DskipTests clean install \
      && cp $PORTAL_HOME/portal/target/cbioportal*.war $CATALINA_HOME/webapps/cbioportal.war \
-     && find $PWD/core/src/main/scripts/ -type f -executable \! -name '*.pl'  -print0 | xargs -0 -- ln -st /usr/local/bin \
+     && find $PWD/core/src/main/scripts/ -type f -executable \! -name '*.pl' -print0 | xargs -0 -- ln -sft /usr/local/bin \
      && sh $CATALINA_HOME/bin/catalina.sh run
