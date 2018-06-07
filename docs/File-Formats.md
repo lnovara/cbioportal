@@ -105,7 +105,7 @@ An example metadata file, e.g. named meta_clinical_sample.txt, would be:
 cancer_study_identifier: brca_tcga_pub
 genetic_alteration_type: CLINICAL
 datatype: SAMPLE_ATTRIBUTES
-data_filename: data_clinical_samples.txt
+data_filename: data_clinical_sample.txt
 ```
 
 An example metadata file, e.g. named meta_clinical_patient.txt, would be:
@@ -113,7 +113,7 @@ An example metadata file, e.g. named meta_clinical_patient.txt, would be:
 cancer_study_identifier: brca_tcga_pub
 genetic_alteration_type: CLINICAL
 datatype: PATIENT_ATTRIBUTES
-data_filename: data_clinical_patients.txt
+data_filename: data_clinical_patient.txt
 ```
 
 #### Data files
@@ -533,6 +533,12 @@ The mutation metadata file should contain the following fields:
 #### Variant classification filter
 The `variant_classification_filter` field can be used to filter out specific mutations. This field should contain a comma separated list of `Variant_Classification` values. By default, cBioPortal filters out `Silent, Intron, IGR, 3'UTR, 5'UTR, 3'Flank and 5'Flank`, except for the promoter mutations of the TERT gene. For no filtering, include this field in the metadata file, but leave it empty. For cBioPortal default filtering, do not include this field in the metadata file.
 Allowed values to filter out (mainly from [Mutation Annotation Format page](https://wiki.nci.nih.gov/display/TCGA/Mutation+Annotation+Format+%28MAF%29+Specification)): `Frame_Shift_Del, Frame_Shift_Ins, In_Frame_Del, In_Frame_Ins, Missense_Mutation, Nonsense_Mutation, Silent, Splice_Site, Translation_Start_Site, Nonstop_Mutation, 3'UTR, 3'Flank, 5'UTR, 5'Flank, IGR, Intron, RNA, Targeted_Region, De_novo_Start_InFrame, De_novo_Start_OutOfFrame, Splice_Region and Unknown`
+
+#### Tumor seq allele ambiguity
+Bugs may exist in MAF data that make it ambiguous as to whether `Tumor_Seq_Allele1` or `Tumor_Seq_Allele2` should be seen as the variant allele to be used when a new mutation record is created and imported in cBioPortal. In such cases, preference is given to the tumor seq allele value that matches a valid nucleotide pattern `^[ATGC]*$` versus a null or empty value, or "-".
+For example, given `Reference_Allele` = "G", `Tumor_Seq_Allele` = "-", and `Tumor_Seq_Allele2` = "A", preference will be given to `Tumor_Seq_Allele2`. Using this same example with `Tumor_Seq_Allele1` = "T", preference will be given to `Tumor_Seq_Allele1` if it does not match `Reference_Allele`, which in this case it does not.
+
+When curating MAF data, it is best practice to leave `Tumor_Seq_Allele1` empty if this information is not provided in your data source to avoid this ambiguity.
 
 #### Example
 An example metadata file would be:
